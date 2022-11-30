@@ -1,32 +1,41 @@
-import {Component } from "react";
+import {useState } from "react";
 import PropTypes from "prop-types";
 
-export class ContactForm extends Component {
-  state = {
-      name: '',
-      number: '',
+export const ContactForm = ({onSubmit}) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleChange = e => {
+      const { name, value } = e.Target;
+      switch (name) {
+        case 'name':
+            setName(value);
+            break;
+
+        case 'number':
+            setNumber(value);
+            break;
+
+    default:
+        return;
+    }
   };
 
-  handleChange = e => {
-      const { name, value } = e.currentTarget;
-      this.setState ({ [name]: value });
-  };
-  handleSubmit = e => {
+  const handleSubmit = e => {
       e.preventDefault();
-      this.props.onSubmit(this.state);
-      this.setState({ name: '', number: '' });
-
+      onSubmit(name, number);
+      setName('');
+      setNumber('');
   };
-  render() {
-      const { name, number } = this.state;
-      return (
-          <form onSubmit={this.handleSubmit}>
+
+    return (
+          <form onSubmit={handleSubmit}>
               <label>Name
                   <input
                       type="text"
                       name="name"
                       value={name}
-                      onChange={this.handleChange}
+                      onChange={handleChange}
                       placeholder="Name" />
               </label>
               <label>Number
@@ -34,7 +43,7 @@ export class ContactForm extends Component {
                       type="text"
                       name="number"
                       value={number}
-                      onChange={this.handleChange}
+                      onChange={handleChange}
                       placeholder="099-00-00" />
               </label>
               <button type="submit">
@@ -43,7 +52,6 @@ export class ContactForm extends Component {
           </form>
       )
   }
-}
 
 ContactForm.propTypes = {
 onSubmit: PropTypes.func.isRequired,
